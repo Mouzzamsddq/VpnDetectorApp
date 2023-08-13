@@ -1,9 +1,11 @@
 package com.example.vpndetector.feature
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import assertk.assertions.support.show
 import com.example.vpndetector.databinding.ActivityMainBinding
 import com.example.vpndetector.feature.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,21 +35,21 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.postListLiveData.observe(this) { postListState ->
             when (postListState) {
                 is MainViewModel.PostListState.Success -> {
-                    showToast("Success")
+                    showLogMessage("Success")
                 }
 
                 is MainViewModel.PostListState.Error -> {
-                    showToast("Error")
+                    showLogMessage("Error : ${postListState.errorMessage}")
                 }
 
                 is MainViewModel.PostListState.Loading -> {
-                    showToast("Loading")
+                    showLogMessage("Loading")
                 }
             }
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+    private fun showLogMessage(message: String) {
+        Log.d("kkk","response status : $message")
     }
 }

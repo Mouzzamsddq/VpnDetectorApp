@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vpndetector.base.ApiData
-import com.example.vpndetector.data.remote.post.model.PostList
+import com.example.vpndetector.data.remote.post.model.PostListItem
 import com.example.vpndetector.data.remote.post.repo.PostRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor(
     }
 
     sealed class PostListState {
-        data class Success(val postList: PostList) : PostListState()
+        data class Success(val postList: List<PostListItem>) : PostListState()
 
         data class Error(val errorMessage: String) : PostListState()
 
