@@ -9,6 +9,6 @@ class PostRepo @Inject constructor(
     private val remotePostDataSource: RemotePostDataSource,
 ) {
 
-    suspend fun signUp(): ApiData<PostList> =
+    suspend fun getPosts(): ApiData<PostList> =
         remotePostDataSource.getPosts()
 }
