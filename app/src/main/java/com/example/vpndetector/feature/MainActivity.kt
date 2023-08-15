@@ -5,11 +5,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vpndetector.databinding.ActivityMainBinding
 import com.example.vpndetector.feature.adapter.PostAdapter
 import com.example.vpndetector.feature.viewmodel.MainViewModel
+import com.example.vpndetector.utils.VpnUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -68,6 +73,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            VpnUtils.isVpnActive(this@MainActivity).collectLatest { isActive ->
+                if (isActive) {
+                    showAlertMessage("vpn is active", true)
+                }
+            }
+        }
     }
 
     private fun changeVisibility(loaderShow: Boolean, recyclerViewShow: Boolean) {
@@ -77,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlertMessage(errorMessage: String) {
+    private fun showAlertMessage(errorMessage: String, fromVpn: Boolean = false) {
         val alertDialog = AlertDialog.Builder(this@MainActivity)
         alertDialog.apply {
             setTitle("Error...!")
@@ -87,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             ) { p0, p1 -> mainViewModel.getAllPosts() }
             setPositiveButton(
                 "Ok",
-            ) { p0, p1 -> }
+            ) { p0, p1 -> if (fromVpn) finishAffinity() }
             show()
         }
     }
