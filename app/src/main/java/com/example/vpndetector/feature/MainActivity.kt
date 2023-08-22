@@ -71,6 +71,14 @@ class MainActivity : AppCompatActivity() {
                         recyclerViewShow = true,
                     )
                 }
+
+                is MainViewModel.PostListState.ValidationError -> {
+                    changeVisibility(
+                        loaderShow = false,
+                        recyclerViewShow = false,
+                    )
+                    showAlertMessage(postListState.errorMessage)
+                }
             }
         }
         lifecycleScope.launch {

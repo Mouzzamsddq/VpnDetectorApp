@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.vpndetector.base.ApiData
 import com.example.vpndetector.data.remote.post.model.PostListItem
 import com.example.vpndetector.data.remote.post.repo.PostRepo
+import com.example.vpndetector.utils.RootUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +22,10 @@ class MainViewModel @Inject constructor(
 
     fun getAllPosts() = viewModelScope.launch {
         _postListLiveData.postValue(PostListState.Loading)
+        if (RootUtils.isDeviceRooted) {
+            _postListLiveData.postValue(PostListState.ValidationError("Device is rooted"))
+            return@launch
+        }
         val response = postRepo.getPosts()
         when (response.status) {
             ApiData.Status.SUCCESS -> {
@@ -45,6 +50,8 @@ class MainViewModel @Inject constructor(
         data class Success(val postList: List<PostListItem>) : PostListState()
 
         data class Error(val errorMessage: String) : PostListState()
+
+        data class ValidationError(val errorMessage: String) : PostListState()
 
         object Loading : PostListState()
     }
