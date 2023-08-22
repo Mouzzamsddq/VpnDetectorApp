@@ -27,8 +27,6 @@ object VpnUtils {
                     }
                 }
                 connectivityManager.registerNetworkCallback(
-
-                    // I have to investigate on this builder!
                     NetworkRequest.Builder()
                         .addTransportType(NetworkCapabilities.TRANSPORT_VPN)
                         .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
